@@ -7,7 +7,6 @@ var     express                 =   require("express"),
         passport                =   require("passport"),
         methodOverride          =   require("method-override"),
         LocalStrategy           =   require("passport-local"),
-        //User                    =   require("./models/user");
         passportLocalMongoose   =   require("passport-local-mongoose");
         
         mongoose.connect("mongodb://localhost/meet_greet");
@@ -37,6 +36,45 @@ var     express                 =   require("express"),
         app.get("/", function(req,res){
             res.render("home");
         });
+        
+        //Sign Up
+        app.get("/plans", function(req, res){
+            res.render("plans");
+        });
+        
+        app.get("/register", function(req, res){
+            res.render("register");
+        });
+        
+        app.post("/register", function(req, res){
+              res.redirect("user/show");
+        });  
+        
+        //Log in
+        app.get("/login",function(req, res){
+            res.render("login");
+        });
+        
+        app.post("/login",passport.authenticate("local", 
+        {
+            successRedirect: "/user/show",
+            failureRedirect: "/login",
+            failureFlash: true
+        
+        }));
+        
+        //Log out
+        app.get("/logout", function(req, res){
+            req.logout();
+            req.flash("success", "Logged you out!");
+            res.redirect("/");
+        });
+        
+       //Chatroom
+       app.get("/chatroom", function(req, res){
+           res.render("chatroom");
+       });
+        
         
         app.listen(process.env.PORT, process.env.IP, function(){
             console.log("Meet & Greet Server Started!");
